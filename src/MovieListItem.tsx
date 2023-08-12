@@ -2,6 +2,8 @@ import React from 'react';
 import {View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
+import {useAppContext} from './AppContext';
+
 interface Movie {
   _id: string;
   title: string;
@@ -17,19 +19,35 @@ interface MovieListItemProps {
 const MovieListItem: React.FC<MovieListItemProps> = ({movie}) => {
   const navigation = useNavigation();
 
+  const {isDarkMode} = useAppContext();
+
   const handlePress = () => {
     console.log(movie);
     navigation.navigate('MovieDetail', {movieData: movie});
   };
 
+  const containerStyle = isDarkMode
+    ? [styles.container, styles.darkContainer]
+    : styles.container;
+
+  const titleStyle = isDarkMode
+    ? [styles.title, styles.darkLabel]
+    : styles.title;
+
+  const titleYear = isDarkMode ? [styles.year, styles.darkLabel] : styles.title;
+
+  const titleRating = isDarkMode
+    ? [styles.rating, styles.darkLabel]
+    : styles.title;
+
   return (
-    <TouchableOpacity onPress={handlePress} style={styles.container}>
+    <TouchableOpacity onPress={handlePress} style={containerStyle}>
       <View style={styles.container}>
         {/* <Image source={{uri: movie.posterLink}} style={styles.poster} /> */}
         <View style={styles.details}>
-          <Text style={styles.title}>{movie.title}</Text>
-          <Text style={styles.year}>{movie.year}</Text>
-          <Text style={styles.rating}>{movie.criticsRating}</Text>
+          <Text style={titleStyle}>{movie.title}</Text>
+          <Text style={titleYear}>{movie.year}</Text>
+          <Text style={titleRating}>{movie.criticsRating}</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -43,6 +61,13 @@ const styles = StyleSheet.create({
     padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
+  },
+  darkContainer: {
+    backgroundColor: '#121212', // Dark mode background color
+    flex: 1,
+  },
+  darkLabel: {
+    color: '#ffffff', // Dark mode text color
   },
   poster: {
     width: 80,

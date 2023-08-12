@@ -8,6 +8,8 @@ import {
   ActivityIndicator,
 } from 'react-native';
 
+import {useAppContext} from './AppContext';
+
 interface Movie {
   _id: string;
   title: string;
@@ -29,21 +31,12 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({route}) => {
   const [editedMovie, setEditedMovie] = useState<Movie>(movieData);
   const [loading, setLoading] = useState(false);
 
+  const {isDarkMode} = useAppContext();
+
   const handleEdit = async () => {
     setLoading(true);
     console.log('edited', JSON.stringify(editedMovie));
     try {
-      // const response = await fetch(
-      //   `http:localhost:3000/api/update/${movieData._id}`,
-      //   {
-      //     method: 'PUT',
-      //     headers: {
-      //       'Content-Type': 'application/json',
-      //     },
-      //     body: JSON.stringify(editedMovie),
-      //   },
-      // );
-
       const response = await fetch(
         `https://mdev1004-2023-assignment-2.onrender.com/api/update/${movieData._id}`,
         {
@@ -65,18 +58,32 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({route}) => {
     }
   };
 
+  const containerStyle = isDarkMode
+    ? [styles.container, styles.darkContainer]
+    : styles.container;
+
+  const titleStyle = isDarkMode
+    ? [styles.label, styles.darkLabel]
+    : styles.label;
+
+  const inputStyle = isDarkMode
+    ? [styles.input, styles.darkInput]
+    : styles.input;
+
+  // const textStyle = isDarkMode ? styles.darkText : styles.text;
+
   let view = editedMovie ? (
-    <View style={styles.container}>
-      <Text style={styles.label}>Title</Text>
+    <View style={containerStyle}>
+      <Text style={titleStyle}>Title</Text>
       <TextInput
-        style={styles.input}
+        style={inputStyle}
         value={editedMovie.title}
         onChangeText={text => setEditedMovie({...editedMovie, title: text})}
       />
 
-      <Text style={styles.label}>Year</Text>
+      <Text style={titleStyle}>Year</Text>
       <TextInput
-        style={styles.input}
+        style={inputStyle}
         value={editedMovie.year.toString()}
         onChangeText={text =>
           setEditedMovie({...editedMovie, year: parseInt(text)})
@@ -84,9 +91,9 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({route}) => {
         keyboardType="numeric"
       />
 
-      <Text style={styles.label}>Rating</Text>
+      <Text style={titleStyle}>Rating</Text>
       <TextInput
-        style={styles.input}
+        style={inputStyle}
         value={editedMovie.criticsRating.toString()}
         onChangeText={text =>
           setEditedMovie({...editedMovie, criticsRating: parseInt(text)})
@@ -94,30 +101,30 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({route}) => {
         keyboardType="numeric"
       />
 
-      <Text style={styles.label}>Genres</Text>
+      <Text style={titleStyle}>Genres</Text>
       <TextInput
-        style={styles.input}
+        style={inputStyle}
         value={editedMovie.genres.toString()}
         onChangeText={text => setEditedMovie({...editedMovie, genres: text})}
       />
 
-      <Text style={styles.label}>Directors</Text>
+      <Text style={titleStyle}>Directors</Text>
       <TextInput
-        style={styles.input}
+        style={inputStyle}
         value={editedMovie.directors.toString()}
         onChangeText={text => setEditedMovie({...editedMovie, directors: text})}
       />
 
-      <Text style={styles.label}>Writers</Text>
+      <Text style={titleStyle}>Writers</Text>
       <TextInput
-        style={styles.input}
+        style={inputStyle}
         value={editedMovie.writers.toString()}
         onChangeText={text => setEditedMovie({...editedMovie, writers: text})}
       />
 
-      <Text style={styles.label}>Actors</Text>
+      <Text style={titleStyle}>Actors</Text>
       <TextInput
-        style={styles.input}
+        style={inputStyle}
         value={editedMovie.actors.toString()}
         onChangeText={text => setEditedMovie({...editedMovie, actors: text})}
       />
@@ -136,11 +143,20 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({route}) => {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
+    backgroundColor: '#ffffff', // Light mode background color
+  },
+  darkContainer: {
+    backgroundColor: '#121212', // Dark mode background color
+    flex: 1,
   },
   label: {
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 5,
+    color: '#000000', // Light mode text color
+  },
+  darkLabel: {
+    color: '#ffffff', // Dark mode text color
   },
   input: {
     borderWidth: 1,
@@ -149,6 +165,16 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 15,
     fontSize: 16,
+    color: '#000000', // Light mode text color
+  },
+  darkInput: {
+    color: '#ffffff', // Dark mode text color
+  },
+  text: {
+    color: '#000000', // Light mode text color
+  },
+  darkText: {
+    color: '#ffffff', // Dark mode text color
   },
   loading: {
     marginTop: 20,

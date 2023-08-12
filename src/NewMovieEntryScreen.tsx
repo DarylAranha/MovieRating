@@ -8,6 +8,8 @@ import {
   ActivityIndicator,
 } from 'react-native';
 
+import {useAppContext} from './AppContext';
+
 interface Movie {
   title: string;
   year: number;
@@ -30,6 +32,8 @@ const NewMovieEntryScreen: React.FC = () => {
   const [genres, setGenres] = React.useState('');
   const [loading, setLoading] = React.useState(false);
 
+  const {isDarkMode} = useAppContext();
+
   // Function to handle submission
   const handleAdd = async () => {
     setLoading(true);
@@ -48,13 +52,6 @@ const NewMovieEntryScreen: React.FC = () => {
     // Now you can perform the API call to add the new movie
     // and handle success/failure accordingly
     try {
-      // const response = await fetch(`http:localhost:3000/api/add`, {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify(newMovie),
-      // });
       const response = await fetch(
         `https://mdev1004-2023-assignment-2.onrender.com/api/add`,
         {
@@ -73,43 +70,53 @@ const NewMovieEntryScreen: React.FC = () => {
     }
   };
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.label}>Title</Text>
-      <TextInput style={styles.input} value={title} onChangeText={setTitle} />
+  const containerStyle = isDarkMode
+    ? [styles.container, styles.darkContainer]
+    : styles.container;
 
-      <Text style={styles.label}>Year</Text>
+  const titleStyle = isDarkMode
+    ? [styles.label, styles.darkLabel]
+    : styles.label;
+
+  const inputStyle = isDarkMode
+    ? [styles.input, styles.darkInput]
+    : styles.input;
+
+  // const textStyle = isDarkMode ? styles.darkText : styles.text;
+
+  return (
+    <View style={containerStyle}>
+      <Text style={titleStyle}>Title</Text>
+      <TextInput style={inputStyle} value={title} onChangeText={setTitle} />
+
+      <Text style={titleStyle}>Year</Text>
       <TextInput
-        style={styles.input}
+        style={inputStyle}
         value={year}
         onChangeText={setYear}
         keyboardType="numeric"
       />
 
-      <Text style={styles.label}>Critics Rating</Text>
+      <Text style={titleStyle}>Critics Rating</Text>
       <TextInput
-        style={styles.input}
+        style={inputStyle}
         value={criticsRating}
         onChangeText={setCriticsRating}
         keyboardType="decimal-pad"
       />
 
-      <Text style={styles.label}>Actors</Text>
-      <TextInput style={styles.input} value={actors} onChangeText={setActors} />
+      <Text style={titleStyle}>Actors</Text>
+      <TextInput style={inputStyle} value={actors} onChangeText={setActors} />
 
-      <Text style={styles.label}>Writers</Text>
+      <Text style={titleStyle}>Writers</Text>
+      <TextInput style={inputStyle} value={writers} onChangeText={setWriters} />
+
+      <Text style={titleStyle}>Genres</Text>
+      <TextInput style={inputStyle} value={genres} onChangeText={setGenres} />
+
+      <Text style={titleStyle}>Directors</Text>
       <TextInput
-        style={styles.input}
-        value={writers}
-        onChangeText={setWriters}
-      />
-
-      <Text style={styles.label}>Genres</Text>
-      <TextInput style={styles.input} value={genres} onChangeText={setGenres} />
-
-      <Text style={styles.label}>Directors</Text>
-      <TextInput
-        style={styles.input}
+        style={inputStyle}
         value={directors}
         onChangeText={setDirectors}
       />
@@ -127,11 +134,20 @@ const NewMovieEntryScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
+    backgroundColor: '#ffffff', // Light mode background color
+  },
+  darkContainer: {
+    backgroundColor: '#121212', // Dark mode background color
+    flex: 1,
   },
   label: {
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 5,
+    color: '#000000', // Light mode text color
+  },
+  darkLabel: {
+    color: '#ffffff', // Dark mode text color
   },
   input: {
     borderWidth: 1,
@@ -140,6 +156,16 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 15,
     fontSize: 16,
+    color: '#000000', // Light mode text color
+  },
+  darkInput: {
+    color: '#ffffff', // Dark mode text color
+  },
+  text: {
+    color: '#000000', // Light mode text color
+  },
+  darkText: {
+    color: '#ffffff', // Dark mode text color
   },
   loading: {
     marginTop: 20,

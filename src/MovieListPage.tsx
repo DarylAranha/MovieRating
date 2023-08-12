@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import MovieListItem from './MovieListItem';
 import {useNavigation} from '@react-navigation/native';
+import {useAppContext} from './AppContext';
 
 interface Movie {
   _id: string;
@@ -20,18 +21,13 @@ interface Movie {
   // ... other movie properties
 }
 
-interface MovieData {
-  success: boolean;
-  msg: string;
-  data: Movie[];
-}
-
 const MovieListPage: React.FC = () => {
   const [movieData, setMovieData] = useState<Movie[] | null>(null);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const navigation = useNavigation();
+  const {isDarkMode} = useAppContext();
 
   async function fetchMovies() {
     setLoading(true);
@@ -72,13 +68,17 @@ const MovieListPage: React.FC = () => {
     );
   }
 
+  const containerStyle = isDarkMode
+    ? [styles.container, styles.darkContainer]
+    : styles.container;
+
   return (
     <ScrollView
-      style={styles.container}
+      style={containerStyle}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }>
-      <View style={styles.container}>
+      <View style={containerStyle}>
         <FlatList
           data={movieData}
           keyExtractor={item => item._id}
@@ -92,6 +92,11 @@ const MovieListPage: React.FC = () => {
         title="Add New Entry"
         onPress={() => navigation.navigate('NewMovieEntry')}
       />
+      <Button
+        title="Settings"
+        onPress={() => navigation.navigate('Settings')}
+        style={styles.settingsButton}
+      />
     </ScrollView>
   );
 };
@@ -99,6 +104,10 @@ const MovieListPage: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#ffffff', // Light mode background color
+  },
+  darkContainer: {
+    backgroundColor: '#121212', // Dark mode background color
   },
   loadingContainer: {
     flex: 1,
@@ -107,6 +116,11 @@ const styles = StyleSheet.create({
   },
   loading: {
     marginTop: 20,
+  },
+  settingsButton: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
   },
 });
 
