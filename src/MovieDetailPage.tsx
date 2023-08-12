@@ -13,6 +13,10 @@ interface Movie {
   title: string;
   year: number;
   criticsRating: number;
+  writers: string;
+  actors: string;
+  directors: string;
+  genres: string;
   // ... other properties
 }
 
@@ -27,8 +31,19 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({route}) => {
 
   const handleEdit = async () => {
     setLoading(true);
-    console.log('edited', editedMovie);
+    console.log('edited', JSON.stringify(editedMovie));
     try {
+      // const response = await fetch(
+      //   `http:localhost:3000/api/update/${movieData._id}`,
+      //   {
+      //     method: 'PUT',
+      //     headers: {
+      //       'Content-Type': 'application/json',
+      //     },
+      //     body: JSON.stringify(editedMovie),
+      //   },
+      // );
+
       const response = await fetch(
         `https://mdev1004-2023-assignment-2.onrender.com/api/update/${movieData._id}`,
         {
@@ -79,6 +94,33 @@ const MovieDetailPage: React.FC<MovieDetailPageProps> = ({route}) => {
         keyboardType="numeric"
       />
 
+      <Text style={styles.label}>Genres</Text>
+      <TextInput
+        style={styles.input}
+        value={editedMovie.genres.toString()}
+        onChangeText={text => setEditedMovie({...editedMovie, genres: text})}
+      />
+
+      <Text style={styles.label}>Directors</Text>
+      <TextInput
+        style={styles.input}
+        value={editedMovie.directors.toString()}
+        onChangeText={text => setEditedMovie({...editedMovie, directors: text})}
+      />
+
+      <Text style={styles.label}>Writers</Text>
+      <TextInput
+        style={styles.input}
+        value={editedMovie.writers.toString()}
+        onChangeText={text => setEditedMovie({...editedMovie, writers: text})}
+      />
+
+      <Text style={styles.label}>Actors</Text>
+      <TextInput
+        style={styles.input}
+        value={editedMovie.actors.toString()}
+        onChangeText={text => setEditedMovie({...editedMovie, actors: text})}
+      />
       {/* Add more input fields for other properties */}
 
       <Button title="Edit" onPress={handleEdit} />

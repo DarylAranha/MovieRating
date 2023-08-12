@@ -36,6 +36,7 @@ const MovieListPage: React.FC = () => {
   async function fetchMovies() {
     setLoading(true);
     try {
+      // const response = await fetch('http:localhost:3000/api/list');
       const response = await fetch(
         'https://mdev1004-2023-assignment-2.onrender.com/api/list',
       );
@@ -58,7 +59,7 @@ const MovieListPage: React.FC = () => {
     // Implement your refresh logic here
     // For example, you can refetch the movie data
     // and update editedMovie
-    fetchMovies();
+    await fetchMovies();
 
     setRefreshing(false);
   };
